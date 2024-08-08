@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortner</title>
+</head>
+
+    <body>
+        <h1>URL Shortener</h1>
+        <form action="{{ url_for('index') }}" method="post">
+            <input type="text" name="long_url" placeholder="Enter your URL">
+            <button type="submit">Shortenn!</button>
+        </form>
+        
+    </body>
+
+</html>
