@@ -3,16 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>URL Shortner</title>
-</head>
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Function to reload the page every 60 seconds
+        function autoReload() {
+            setTimeout(function() {
+                window.location.reload();
+            }, 60000); // 60000 milliseconds = 60 seconds
+        }
+        window.onload = autoReload;
+    </script>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: calc(100% - 110px);
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
 
-    <body>
+        /* Styling for the URL list */
+        .url-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .url-list div {
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            overflow-wrap: break-word; /* Break long words to fit in container */
+        }
+        .url-list .number {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #007bff;
+            min-width: 30px; /* Ensure the number has enough space */
+        }
+        .url-list a {
+            text-decoration: none;
+            color: #007bff;
+            word-break: break-all; /* Ensure very long URLs break */
+        }
+        .url-list a:hover {
+            text-decoration: underline;
+        }
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: auto;
+            margin-right: 10px;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
         <h1>URL Shortener</h1>
         <form action="{{ url_for('index') }}" method="post">
-            <input type="text" name="long_url" placeholder="Enter your URL">
-            <button type="submit">Shortenn!</button>
+            <input type="text" name="long_url" placeholder="Enter your URL" required>
+            <button type="submit">Shorten!</button>
         </form>
-        
-    </body>
 
+        <div class="url-list">
+            {% if short_urls %}
+                <h2>Shortened URLs:</h2>
+                {% for short_url, data in short_urls.items() %}
+                    <div>
+                        <span class="number">{{ loop.index }}.</span>
+                        <a href="{{ url_for('redirect_url', short_url=short_url) }}">{{ request.url_root }}{{ short_url }}</a> - {{ data['url'] }}
+                        <form action="{{ url_for('delete_url', short_url=short_url) }}" method="post" style="display: inline;">
+                            <button type="submit" class="delete-button" onclick="return confirm('Are you sure you want to delete this URL?');">Delete</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No URLs have been shortened yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
 </html>
