@@ -9,7 +9,7 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'  # Needed for flashing messages
 short_urls = {}
-EXPIRY_TIME = 60  # 1 minute
+EXPIRY_TIME = 6000  # 1 minute
 
 # Load existing short URLs from file if it exists
 try:
